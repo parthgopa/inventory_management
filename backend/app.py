@@ -44,6 +44,19 @@ class JSONEncoder(json.JSONEncoder):
 
 app.json_encoder = JSONEncoder
 
+# WSGI Middleware: Rewrite /api/* paths to /* for backward compatibility
+# This runs BEFORE Flask routing, unlike @before_request
+class ApiPathRewriteMiddleware:
+    def __init__(self, app):
+        self.app = app
+    
+    def __call__(self, environ, start_response):
+        path = environ.get('PATH_INFO', '')
+        if path.startswith('/api/'):
+            # Strip /api prefix before Flask sees it
+            environ['PATH_INFO'] = path[4:]  # /api/inventory -> /inventory
+        return self.app(environ, start_response)
+
 # Register blueprints
 app.register_blueprint(scanner_bp)
 app.register_blueprint(inventory_bp)
@@ -54,6 +67,8 @@ app.register_blueprint(auth_bp)
 app.register_blueprint(production_bp)
 app.register_blueprint(skus_bp)
 
+# Wrap app with middleware to rewrite /api/* paths to /*
+app.wsgi_app = ApiPathRewriteMiddleware(app.wsgi_app)
 
 if __name__ == '__main__':
     print("=" * 50)

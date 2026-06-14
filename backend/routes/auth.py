@@ -11,7 +11,7 @@ PREFS_DOC_ID = 'global'
 DEFAULT_PREFS = {'lowStockThreshold': 50}
 
 
-@auth_bp.route('/api/preferences', methods=['GET'])
+@auth_bp.route('/preferences', methods=['GET'])
 def get_preferences():
     """Get global app preferences"""
     try:
@@ -23,7 +23,7 @@ def get_preferences():
         return jsonify(DEFAULT_PREFS), 200
 
 
-@auth_bp.route('/api/preferences', methods=['PUT'])
+@auth_bp.route('/preferences', methods=['PUT'])
 def update_preferences():
     """Save global app preferences"""
     try:

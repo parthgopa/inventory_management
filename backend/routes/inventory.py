@@ -11,7 +11,7 @@ from db import barcodes_collection, scan_events_collection, STOCK_THRESHOLD
 inventory_bp = Blueprint('inventory', __name__)
 
 
-@inventory_bp.route('/api/inventory', methods=['GET'])
+@inventory_bp.route('/inventory', methods=['GET'])
 def get_inventory():
     """
     Get inventory grouped by product (SKU + Color + Company).
@@ -154,7 +154,7 @@ def get_inventory():
         return jsonify({'error': str(e)}), 500
 
 
-@inventory_bp.route('/api/inventory/product-images', methods=['GET'])
+@inventory_bp.route('/inventory/product-images', methods=['GET'])
 def get_all_product_images():
     """
     Return all product images in one query keyed by 'sku_name__color__company_name'.
@@ -185,7 +185,7 @@ def get_all_product_images():
         return jsonify({'error': str(e)}), 500
 
 
-@inventory_bp.route('/api/inventory/product-image/<sku_name>', methods=['GET'])
+@inventory_bp.route('/inventory/product-image/<sku_name>', methods=['GET'])
 def get_product_image(sku_name):
     """Get product image by SKU name - for lazy loading"""
     try:
@@ -212,7 +212,7 @@ def get_product_image(sku_name):
         return jsonify({'error': str(e)}), 500
 
 
-@inventory_bp.route('/api/inventory/all-barcodes', methods=['GET'])
+@inventory_bp.route('/inventory/all-barcodes', methods=['GET'])
 def get_all_barcodes():
     """
     Get all barcodes (including unscanned ones) with their stock status.
@@ -282,7 +282,7 @@ def get_all_barcodes():
         return jsonify({'error': str(e)}), 500
 
 
-@inventory_bp.route('/api/inventory/product/<sku_name>', methods=['GET'])
+@inventory_bp.route('/inventory/product/<sku_name>', methods=['GET'])
 def get_product_details(sku_name):
     """
     Get detailed inventory for a specific product (all barcodes for this SKU).
@@ -368,7 +368,7 @@ def get_product_details(sku_name):
         return jsonify({'error': str(e)}), 500
 
 
-@inventory_bp.route('/api/inventory/product/<sku_name>/export', methods=['GET'])
+@inventory_bp.route('/inventory/product/<sku_name>/export', methods=['GET'])
 def export_product_csv(sku_name):
     """Export product inventory details to CSV"""
     try:
@@ -457,7 +457,7 @@ def export_product_csv(sku_name):
         return jsonify({'error': str(e)}), 500
 
 
-@inventory_bp.route('/api/inventory/barcode/<barcode_id>', methods=['GET'])
+@inventory_bp.route('/inventory/barcode/<barcode_id>', methods=['GET'])
 def get_barcode_details(barcode_id):
     """Get detailed info for a specific barcode"""
     try:
@@ -499,7 +499,7 @@ def get_barcode_details(barcode_id):
         return jsonify({'error': str(e)}), 500
 
 
-@inventory_bp.route('/api/inventory/summary', methods=['GET'])
+@inventory_bp.route('/inventory/summary', methods=['GET'])
 def get_inventory_summary():
     """Get overall inventory summary stats"""
     try:
@@ -587,7 +587,7 @@ def get_inventory_summary():
         return jsonify({'error': str(e)}), 500
 
 
-@inventory_bp.route('/api/admin/adjust-stock', methods=['POST'])
+@inventory_bp.route('/admin/adjust-stock', methods=['POST'])
 def admin_adjust_stock():
     """Admin stock adjustment"""
     try:
@@ -636,7 +636,7 @@ def admin_adjust_stock():
         return jsonify({'error': str(e)}), 500
 
 
-@inventory_bp.route('/api/inventory/product/<sku_name>', methods=['DELETE'])
+@inventory_bp.route('/inventory/product/<sku_name>', methods=['DELETE'])
 def delete_product(sku_name):
     """
     Delete a product and all its associated data:

@@ -38,7 +38,7 @@ def generate_barcode_base64(barcode_id, compact=False):
     return base64.b64encode(img_buffer.read()).decode('utf-8')
 
 
-@barcodes_bp.route('/api/barcode-batches', methods=['POST'])
+@barcodes_bp.route('/barcode-batches', methods=['POST'])
 def create_barcode_batch():
     """Create a new batch of barcodes with optional product image"""
     data = request.json
@@ -104,7 +104,7 @@ def create_barcode_batch():
     }), 201
 
 
-@barcodes_bp.route('/api/barcode-batches/<batch_id>/image', methods=['PUT'])
+@barcodes_bp.route('/barcode-batches/<batch_id>/image', methods=['PUT'])
 def update_batch_image(batch_id):
     """Update or add product image for a batch"""
     try:
@@ -129,7 +129,7 @@ def update_batch_image(batch_id):
         return jsonify({'error': str(e)}), 500
 
 
-@barcodes_bp.route('/api/barcode-batches/<batch_id>/image', methods=['GET'])
+@barcodes_bp.route('/barcode-batches/<batch_id>/image', methods=['GET'])
 def get_batch_image(batch_id):
     """Get product image for a batch"""
     try:
@@ -146,7 +146,7 @@ def get_batch_image(batch_id):
         return jsonify({'error': str(e)}), 500
 
 
-@barcodes_bp.route('/api/barcode-batches', methods=['GET'])
+@barcodes_bp.route('/barcode-batches', methods=['GET'])
 def get_all_batches():
     """Get all barcode batches"""
     try:
@@ -178,7 +178,7 @@ def get_all_batches():
         return jsonify({'error': str(e)}), 500
 
 
-@barcodes_bp.route('/api/barcode-batches/<batch_id>', methods=['GET'])
+@barcodes_bp.route('/barcode-batches/<batch_id>', methods=['GET'])
 def get_batch_details(batch_id):
     """Get details of a specific batch with optional base64 images"""
     try:
@@ -235,7 +235,7 @@ def get_batch_details(batch_id):
         return jsonify({'error': str(e)}), 500
 
 
-@barcodes_bp.route('/api/barcode-batches/<batch_id>/download', methods=['GET'])
+@barcodes_bp.route('/barcode-batches/<batch_id>/download', methods=['GET'])
 def download_barcode_batch(batch_id):
     """Download barcode images as ZIP"""
     barcodes_list = list(barcodes_collection.find({'batch_id': batch_id}))
@@ -268,7 +268,7 @@ def download_barcode_batch(batch_id):
     )
 
 
-@barcodes_bp.route('/api/barcode-image/<barcode_id>', methods=['GET'])
+@barcodes_bp.route('/barcode-image/<barcode_id>', methods=['GET'])
 def get_barcode_image(barcode_id):
     """Get barcode image"""
     try:
@@ -288,7 +288,7 @@ def get_barcode_image(barcode_id):
         return jsonify({'error': str(e)}), 500
 
 
-@barcodes_bp.route('/api/barcode-batches/<batch_id>/document', methods=['GET'])
+@barcodes_bp.route('/barcode-batches/<batch_id>/document', methods=['GET'])
 def generate_barcode_document(batch_id):
     """
     Generate Word/PDF document with barcodes in grid layout.

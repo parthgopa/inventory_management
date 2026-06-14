@@ -8,7 +8,7 @@ from db import barcodes_collection, scan_events_collection, STOCK_THRESHOLD
 dashboard_bp = Blueprint('dashboard', __name__)
 
 
-@dashboard_bp.route('/api/dashboard/stats', methods=['GET'])
+@dashboard_bp.route('/dashboard/stats', methods=['GET'])
 def get_dashboard_stats():
     """Get dashboard statistics"""
     try:
@@ -87,7 +87,7 @@ def get_dashboard_stats():
         return jsonify({'error': str(e)}), 500
 
 
-@dashboard_bp.route('/api/health', methods=['GET'])
+@dashboard_bp.route('/health', methods=['GET'])
 def health_check():
     """Health check endpoint"""
     return jsonify({'status': 'ok', 'message': 'Server is running'}), 200

@@ -17,7 +17,7 @@ def serialize(doc):
     return doc
 
 
-@skus_bp.route('/api/skus', methods=['GET'])
+@skus_bp.route('/skus', methods=['GET'])
 def list_skus():
     """Return all SKUs, optionally filtered by ?q= for autocomplete."""
     q = (request.args.get('q') or '').strip()
@@ -28,14 +28,14 @@ def list_skus():
     return jsonify([serialize(d) for d in docs]), 200
 
 
-@skus_bp.route('/api/skus/names', methods=['GET'])
+@skus_bp.route('/skus/names', methods=['GET'])
 def list_sku_names():
     """Lightweight endpoint — returns just sku_name strings for autocomplete."""
     docs = list(sku_catalog_collection.find({}, {'sku_name': 1, '_id': 0}).sort('sku_name', 1))
     return jsonify([d['sku_name'] for d in docs]), 200
 
 
-@skus_bp.route('/api/skus', methods=['POST'])
+@skus_bp.route('/skus', methods=['POST'])
 def create_sku():
     """Create a new SKU entry. Body: { sku_name, description?, image?, color?, fabric?, mrp? }"""
     data = request.json or {}
@@ -63,7 +63,7 @@ def create_sku():
     return jsonify(serialize(doc)), 201
 
 
-@skus_bp.route('/api/skus/<sku_name>', methods=['GET'])
+@skus_bp.route('/skus/<sku_name>', methods=['GET'])
 def get_sku(sku_name):
     doc = sku_catalog_collection.find_one({'sku_name': sku_name})
     if not doc:
@@ -71,7 +71,7 @@ def get_sku(sku_name):
     return jsonify(serialize(doc)), 200
 
 
-@skus_bp.route('/api/skus/<sku_name>', methods=['PATCH'])
+@skus_bp.route('/skus/<sku_name>', methods=['PATCH'])
 def update_sku(sku_name):
     """Update description, image, color, fabric, and/or mrp."""
     data = request.json or {}
@@ -97,7 +97,7 @@ def update_sku(sku_name):
     return jsonify(serialize(doc)), 200
 
 
-@skus_bp.route('/api/skus/<sku_name>', methods=['DELETE'])
+@skus_bp.route('/skus/<sku_name>', methods=['DELETE'])
 def delete_sku(sku_name):
     result = sku_catalog_collection.delete_one({'sku_name': sku_name})
     if result.deleted_count == 0:

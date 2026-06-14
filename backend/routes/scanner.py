@@ -102,10 +102,10 @@ def check_alerts_async(barcode_id, current_stock, sku_name, company_name):
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# STOCK IN ROUTE: POST /api/scan/in
+# STOCK IN ROUTE: POST /scan/in
 # Single MongoDB round-trip using find_one_and_update
 # ══════════════════════════════════════════════════════════════════════════════
-@scanner_bp.route('/api/scan/in', methods=['POST'])
+@scanner_bp.route('/scan/in', methods=['POST'])
 def scan_stock_in():
     """
     Stock IN - increment stock by 1
@@ -175,10 +175,10 @@ def scan_stock_in():
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# STOCK OUT ROUTE: POST /api/scan/out
+# STOCK OUT ROUTE: POST /scan/out
 # Single MongoDB round-trip using find_one_and_update
 # ══════════════════════════════════════════════════════════════════════════════
-@scanner_bp.route('/api/scan/out', methods=['POST'])
+@scanner_bp.route('/scan/out', methods=['POST'])
 def scan_stock_out():
     """
     Stock OUT - decrement stock by 1
@@ -257,13 +257,13 @@ def scan_stock_out():
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# LEGACY ROUTE: Keep /api/scan for backward compatibility (redirects to new routes)
+# LEGACY ROUTE: Keep /scan for backward compatibility (redirects to new routes)
 # ══════════════════════════════════════════════════════════════════════════════
-@scanner_bp.route('/api/scan', methods=['POST'])
+@scanner_bp.route('/scan', methods=['POST'])
 def scan_barcode_legacy():
     """
-    Legacy route - redirects to /api/scan/in or /api/scan/out based on action_type
-    DEPRECATED: Frontend should use /api/scan/in or /api/scan/out directly
+    Legacy route - redirects to /scan/in or /scan/out based on action_type
+    DEPRECATED: Frontend should use /scan/in or /scan/out directly
     """
     data = request.json
     action_type = data.get('action_type')
@@ -276,7 +276,7 @@ def scan_barcode_legacy():
         return jsonify({'error': 'action_type required (IN or OUT)'}), 400
 
 
-@scanner_bp.route('/api/scan-events', methods=['GET'])
+@scanner_bp.route('/scan-events', methods=['GET'])
 def get_scan_events():
     """Get scan events - optimized with limit and projection"""
     try:
@@ -307,7 +307,7 @@ def get_scan_events():
         return jsonify({'error': str(e)}), 500
 
 
-@scanner_bp.route('/api/scanners', methods=['GET'])
+@scanner_bp.route('/scanners', methods=['GET'])
 def get_scanners():
     """Get all registered scanners"""
     try:
@@ -319,7 +319,7 @@ def get_scanners():
         return jsonify({'error': str(e)}), 500
 
 
-@scanner_bp.route('/api/scanners', methods=['POST'])
+@scanner_bp.route('/scanners', methods=['POST'])
 def save_scanner():
     """Register or update a scanner"""
     try:
@@ -370,7 +370,7 @@ def save_scanner():
         return jsonify({'error': str(e)}), 500
 
 
-@scanner_bp.route('/api/scanners/cleanup-duplicates', methods=['DELETE'])
+@scanner_bp.route('/scanners/cleanup-duplicates', methods=['DELETE'])
 def cleanup_duplicate_scanners():
     """Remove duplicate scanner entries"""
     try:
@@ -390,7 +390,7 @@ def cleanup_duplicate_scanners():
         return jsonify({'error': str(e)}), 500
 
 
-@scanner_bp.route('/api/scanners/<scanner_id>/mode', methods=['PUT'])
+@scanner_bp.route('/scanners/<scanner_id>/mode', methods=['PUT'])
 def update_scanner_mode(scanner_id):
     """Update scanner mode (IN/OUT)"""
     try:
@@ -414,7 +414,7 @@ def update_scanner_mode(scanner_id):
         return jsonify({'error': str(e)}), 500
 
 
-@scanner_bp.route('/api/scanners/<scanner_id>', methods=['DELETE'])
+@scanner_bp.route('/scanners/<scanner_id>', methods=['DELETE'])
 def delete_scanner(scanner_id):
     """Delete a scanner"""
     try:

@@ -9,7 +9,7 @@ from db import alerts_collection
 alerts_bp = Blueprint('alerts', __name__)
 
 
-@alerts_bp.route('/api/alerts', methods=['GET'])
+@alerts_bp.route('/alerts', methods=['GET'])
 def get_alerts():
     """Get all alerts - filtering done in frontend"""
     try:
@@ -27,7 +27,7 @@ def get_alerts():
         return jsonify({'error': str(e)}), 500
 
 
-@alerts_bp.route('/api/alerts/<alert_id>/resolve', methods=['PUT'])
+@alerts_bp.route('/alerts/<alert_id>/resolve', methods=['PUT'])
 def resolve_alert(alert_id):
     """Mark an alert as resolved"""
     try:
@@ -44,7 +44,7 @@ def resolve_alert(alert_id):
         return jsonify({'error': str(e)}), 500
 
 
-@alerts_bp.route('/api/alerts/<alert_id>', methods=['DELETE'])
+@alerts_bp.route('/alerts/<alert_id>', methods=['DELETE'])
 def delete_alert(alert_id):
     """Delete an alert"""
     try:

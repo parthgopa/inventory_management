@@ -112,7 +112,7 @@ def compute_all_worker_stock():
 
 # ── Workers ───────────────────────────────────────────────────────────────────
 
-@production_bp.route('/api/production/workers', methods=['GET'])
+@production_bp.route('/production/workers', methods=['GET'])
 def get_workers():
     try:
         workers = list(workers_collection.find({'active': True}).sort('name', 1))
@@ -121,7 +121,7 @@ def get_workers():
         return jsonify({'error': str(e)}), 500
 
 
-@production_bp.route('/api/production/workers', methods=['POST'])
+@production_bp.route('/production/workers', methods=['POST'])
 def create_worker():
     try:
         data = request.json
@@ -148,7 +148,7 @@ def create_worker():
         return jsonify({'error': str(e)}), 500
 
 
-@production_bp.route('/api/production/workers/<worker_id>', methods=['PUT'])
+@production_bp.route('/production/workers/<worker_id>', methods=['PUT'])
 def update_worker(worker_id):
     try:
         data = request.json
@@ -172,7 +172,7 @@ def update_worker(worker_id):
         return jsonify({'error': str(e)}), 500
 
 
-@production_bp.route('/api/production/workers/<worker_id>', methods=['DELETE'])
+@production_bp.route('/production/workers/<worker_id>', methods=['DELETE'])
 def delete_worker(worker_id):
     try:
         workers_collection.update_one({'worker_id': worker_id}, {'$set': {'active': False}})
@@ -183,7 +183,7 @@ def delete_worker(worker_id):
 
 # ── Cloth Orders ──────────────────────────────────────────────────────────────
 
-@production_bp.route('/api/production/orders', methods=['POST'])
+@production_bp.route('/production/orders', methods=['POST'])
 def create_order():
     try:
         data = request.json
@@ -255,7 +255,7 @@ def create_order():
         return jsonify({'error': str(e)}), 500
 
 
-@production_bp.route('/api/production/next-chalan', methods=['GET'])
+@production_bp.route('/production/next-chalan', methods=['GET'])
 def get_next_chalan():
     """Return the next chalan number to be used"""
     try:
@@ -264,7 +264,7 @@ def get_next_chalan():
         return jsonify({'error': str(e)}), 500
 
 
-@production_bp.route('/api/production/orders', methods=['GET'])
+@production_bp.route('/production/orders', methods=['GET'])
 def get_orders():
     try:
         orders = list(cloth_orders_collection.find().sort('created_at', -1))
@@ -273,7 +273,7 @@ def get_orders():
         return jsonify({'error': str(e)}), 500
 
 
-@production_bp.route('/api/production/orders/<order_id>', methods=['GET'])
+@production_bp.route('/production/orders/<order_id>', methods=['GET'])
 def get_order_detail(order_id):
     try:
         order = cloth_orders_collection.find_one({'order_id': order_id})
@@ -286,7 +286,7 @@ def get_order_detail(order_id):
         return jsonify({'error': str(e)}), 500
 
 
-@production_bp.route('/api/production/orders/<order_id>', methods=['PATCH'])
+@production_bp.route('/production/orders/<order_id>', methods=['PATCH'])
 def update_order(order_id):
     """Edit supplier_name, notes, and item fields (sku_name, fabric_type, color, quantity_ordered, mrp) of a cloth order."""
     try:
@@ -350,7 +350,7 @@ def update_order(order_id):
         return jsonify({'error': str(e)}), 500
 
 
-@production_bp.route('/api/production/orders/<order_id>', methods=['DELETE'])
+@production_bp.route('/production/orders/<order_id>', methods=['DELETE'])
 def delete_order(order_id):
     """Delete a cloth order and all its associated ledger entries."""
     try:
@@ -364,7 +364,7 @@ def delete_order(order_id):
         return jsonify({'error': str(e)}), 500
 
 
-@production_bp.route('/api/production/orders/<order_id>/date', methods=['PATCH'])
+@production_bp.route('/production/orders/<order_id>/date', methods=['PATCH'])
 def update_order_date(order_id):
     """Update the created_at date of a cloth order (for backdating)."""
     try:
@@ -384,7 +384,7 @@ def update_order_date(order_id):
         return jsonify({'error': str(e)}), 500
 
 
-@production_bp.route('/api/production/orders/<order_id>/receive', methods=['PATCH'])
+@production_bp.route('/production/orders/<order_id>/receive', methods=['PATCH'])
 def receive_cloth(order_id):
     """Mark cloth as physically received from supplier. Creates ledger: supplier → company."""
     try:
@@ -440,7 +440,7 @@ def receive_cloth(order_id):
 
 # ── Job Work Assignment ───────────────────────────────────────────────────────
 
-@production_bp.route('/api/production/assign', methods=['POST'])
+@production_bp.route('/production/assign', methods=['POST'])
 def assign_job_work():
     """Company → Worker: assign pieces for job work (embroidery, cutting, etc.)"""
     try:
@@ -524,7 +524,7 @@ def assign_job_work():
 
 # ── Additional Work Transfer ──────────────────────────────────────────────────
 
-@production_bp.route('/api/production/transfer', methods=['POST'])
+@production_bp.route('/production/transfer', methods=['POST'])
 def transfer_work():
     """Worker A → Worker B: transfer pieces for additional work (diamond, jari, etc.)"""
     try:
@@ -580,7 +580,7 @@ def transfer_work():
 
 # ── Final Receive (Ready for Barcode) ─────────────────────────────────────────
 
-@production_bp.route('/api/production/receive-final', methods=['POST'])
+@production_bp.route('/production/receive-final', methods=['POST'])
 def receive_final():
     """Worker → Company: receive finished goods. Sets status ready_for_barcode."""
     try:
@@ -668,7 +668,7 @@ def receive_final():
 
 # ── Return to Supplier ────────────────────────────────────────────────────────
 
-@production_bp.route('/api/production/return-to-supplier', methods=['POST'])
+@production_bp.route('/production/return-to-supplier', methods=['POST'])
 def return_to_supplier():
     """Worker or company returns defective/plain cloth back to supplier."""
     try:
@@ -723,7 +723,7 @@ def return_to_supplier():
 
 # ── Ledger Entry Edits ────────────────────────────────────────────────────────
 
-@production_bp.route('/api/production/ledger/<ledger_id>/date', methods=['PATCH'])
+@production_bp.route('/production/ledger/<ledger_id>/date', methods=['PATCH'])
 def update_ledger_date(ledger_id):
     """Update the created_at date of a ledger entry (for backdating)."""
     try:
@@ -743,7 +743,7 @@ def update_ledger_date(ledger_id):
         return jsonify({'error': str(e)}), 500
 
 
-@production_bp.route('/api/production/ledger/<ledger_id>/revert', methods=['POST'])
+@production_bp.route('/production/ledger/<ledger_id>/revert', methods=['POST'])
 def revert_ledger_entry(ledger_id):
     """
     Revert a ledger entry by DELETING it from the ledger.
@@ -774,7 +774,7 @@ def revert_ledger_entry(ledger_id):
 
 # ── Stock & Ledger Queries ────────────────────────────────────────────────────
 
-@production_bp.route('/api/production/worker-stock', methods=['GET'])
+@production_bp.route('/production/worker-stock', methods=['GET'])
 def get_worker_stock():
     try:
         return jsonify(compute_all_worker_stock()), 200
@@ -782,7 +782,7 @@ def get_worker_stock():
         return jsonify({'error': str(e)}), 500
 
 
-@production_bp.route('/api/production/ledger', methods=['GET'])
+@production_bp.route('/production/ledger', methods=['GET'])
 def get_ledger():
     try:
         order_id = request.args.get('order_id')
@@ -804,7 +804,7 @@ def get_ledger():
         return jsonify({'error': str(e)}), 500
 
 
-@production_bp.route('/api/production/ready-for-barcode', methods=['GET'])
+@production_bp.route('/production/ready-for-barcode', methods=['GET'])
 def get_ready_for_barcode():
     """Items that have been final-received at company but barcodes not yet generated. Grouped by (sku_name, color)."""
     try:
@@ -838,7 +838,7 @@ def get_ready_for_barcode():
         return jsonify({'error': str(e)}), 500
 
 
-@production_bp.route('/api/production/mrp', methods=['GET'])
+@production_bp.route('/production/mrp', methods=['GET'])
 def get_mrp_for_sku():
     """Get MRP for a SKU+color combination from the most recent cloth order item."""
     try:
@@ -883,7 +883,7 @@ def get_mrp_for_sku():
         return jsonify({'error': str(e)}), 500
 
 
-@production_bp.route('/api/production/sku-colors', methods=['GET'])
+@production_bp.route('/production/sku-colors', methods=['GET'])
 def get_sku_colors():
     """Get available colors for a SKU from cloth orders."""
     try:
@@ -910,7 +910,7 @@ def get_sku_colors():
         return jsonify({'error': str(e)}), 500
 
 
-@production_bp.route('/api/production/stats', methods=['GET'])
+@production_bp.route('/production/stats', methods=['GET'])
 def get_stats():
     """
     Optimized: 3 DB round-trips total.
@@ -981,7 +981,7 @@ def get_stats():
 
 # ── Worker History ─────────────────────────────────────────────────────────────
 
-@production_bp.route('/api/production/workers/<path:worker_name>/history', methods=['GET'])
+@production_bp.route('/production/workers/<path:worker_name>/history', methods=['GET'])
 def get_worker_history(worker_name):
     """
     Single $facet query returns everything about a worker:
@@ -1067,7 +1067,7 @@ def get_worker_history(worker_name):
 
 # ── Repair: sync ledger supplier names to match cloth orders ──────────────────
 
-@production_bp.route('/api/production/repair/sync-supplier-names', methods=['POST'])
+@production_bp.route('/production/repair/sync-supplier-names', methods=['POST'])
 def repair_sync_supplier_names():
     """One-time repair: for every cloth order, update ledger entries whose
     to_entity or from_entity is an old supplier name to match the current
@@ -1107,7 +1107,7 @@ def repair_sync_supplier_names():
 
 # ── Suppliers ─────────────────────────────────────────────────────────────────
 
-@production_bp.route('/api/production/suppliers', methods=['GET'])
+@production_bp.route('/production/suppliers', methods=['GET'])
 def get_suppliers():
     try:
         docs = list(suppliers_collection.find({'active': True}).sort('name', 1))
@@ -1116,7 +1116,7 @@ def get_suppliers():
         return jsonify({'error': str(e)}), 500
 
 
-@production_bp.route('/api/production/suppliers', methods=['POST'])
+@production_bp.route('/production/suppliers', methods=['POST'])
 def create_supplier():
     try:
         data = request.json or {}
@@ -1141,7 +1141,7 @@ def create_supplier():
         return jsonify({'error': str(e)}), 500
 
 
-@production_bp.route('/api/production/suppliers/<supplier_id>', methods=['PUT'])
+@production_bp.route('/production/suppliers/<supplier_id>', methods=['PUT'])
 def update_supplier(supplier_id):
     try:
         data = request.json or {}
@@ -1162,7 +1162,7 @@ def update_supplier(supplier_id):
         return jsonify({'error': str(e)}), 500
 
 
-@production_bp.route('/api/production/suppliers/<supplier_id>', methods=['DELETE'])
+@production_bp.route('/production/suppliers/<supplier_id>', methods=['DELETE'])
 def delete_supplier(supplier_id):
     try:
         suppliers_collection.update_one({'supplier_id': supplier_id}, {'$set': {'active': False}})
@@ -1171,7 +1171,7 @@ def delete_supplier(supplier_id):
         return jsonify({'error': str(e)}), 500
 
 
-@production_bp.route('/api/production/suppliers/<supplier_name>/holdings', methods=['GET'])
+@production_bp.route('/production/suppliers/<supplier_name>/holdings', methods=['GET'])
 def get_supplier_holdings(supplier_name):
     """Return current holdings and full ledger activity for a supplier entity."""
     try:
